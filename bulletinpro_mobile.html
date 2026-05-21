@@ -9,232 +9,73 @@
 <meta name="theme-color" content="#1e4976">
 <title>BulletinPro Mobile</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  
-  :root {
-    --blue: #1e4976;
-    --blue2: #2563a8;
-    --green: #16a34a;
-    --red: #dc2626;
-    --gray: #f1f5f9;
-    --border: #e2e8f0;
-    --text: #1e293b;
-    --muted: #64748b;
-    --white: #ffffff;
-  }
-
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: var(--gray);
-    color: var(--text);
-    min-height: 100vh;
-    min-height: -webkit-fill-available;
-  }
-
-  /* HEADER */
-  .header {
-    background: var(--blue);
-    padding: 16px 20px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  }
-  .header-logo {
-    width: 36px; height: 36px;
-    background: white;
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px; font-weight: 700; color: var(--blue);
-  }
-  .header-title { color: white; }
-  .header-title h1 { font-size: 18px; font-weight: 700; }
-  .header-title p { font-size: 11px; opacity: 0.7; }
-  .header-right { margin-left: auto; }
-  .btn-logout {
-    background: rgba(255,255,255,0.15);
-    color: white; border: none;
-    padding: 8px 14px; border-radius: 8px;
-    font-size: 13px; cursor: pointer;
-  }
-
-  /* SCREENS */
-  .screen { display: none; padding: 20px; max-width: 480px; margin: 0 auto; }
-  .screen.active { display: block; }
-
-  /* CARDS */
-  .card {
-    background: white;
-    border-radius: 14px;
-    padding: 20px;
-    margin-bottom: 16px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-  }
-  .card-title {
-    font-size: 15px; font-weight: 600;
-    color: var(--blue); margin-bottom: 14px;
-    display: flex; align-items: center; gap: 8px;
-  }
-
-  /* FORMS */
-  label {
-    display: block;
-    font-size: 13px; font-weight: 500;
-    color: var(--muted); margin-bottom: 6px;
-  }
-  input, select {
-    width: 100%; padding: 13px 14px;
-    border: 1.5px solid var(--border);
-    border-radius: 10px; font-size: 15px;
-    background: white; color: var(--text);
-    margin-bottom: 14px;
-    -webkit-appearance: none;
-    appearance: none;
-  }
-  input:focus, select:focus {
-    outline: none;
-    border-color: var(--blue);
-    box-shadow: 0 0 0 3px rgba(30,73,118,0.1);
-  }
-
-  /* BUTTONS */
-  .btn {
-    width: 100%; padding: 15px;
-    border: none; border-radius: 12px;
-    font-size: 16px; font-weight: 600;
-    cursor: pointer; transition: transform 0.1s, opacity 0.1s;
-  }
-  .btn:active { transform: scale(0.98); opacity: 0.9; }
-  .btn-primary { background: var(--blue); color: white; }
-  .btn-green { background: var(--green); color: white; }
-  .btn-outline {
-    background: white; color: var(--blue);
-    border: 2px solid var(--blue);
-  }
-  .btn-small {
-    width: auto; padding: 8px 16px;
-    font-size: 13px; border-radius: 8px;
-  }
-
-  /* LOGIN */
-  .login-logo {
-    text-align: center; padding: 40px 0 30px;
-  }
-  .login-logo .big-b {
-    width: 72px; height: 72px;
-    background: var(--blue);
-    border-radius: 18px;
-    display: inline-flex; align-items: center; justify-content: center;
-    font-size: 36px; font-weight: 700; color: white;
-    margin-bottom: 14px;
-  }
-  .login-logo h2 { font-size: 24px; color: var(--blue); }
-  .login-logo p { font-size: 13px; color: var(--muted); margin-top: 4px; }
-
-  /* SAISIE NOTES */
-  .eleve-card {
-    background: white; border-radius: 12px;
-    padding: 16px; margin-bottom: 10px;
-    border: 1.5px solid var(--border);
-    display: flex; align-items: center; gap: 12px;
-  }
-  .eleve-num {
-    width: 32px; height: 32px;
-    background: var(--gray); border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 13px; font-weight: 600; color: var(--muted);
-    flex-shrink: 0;
-  }
-  .eleve-name { flex: 1; font-size: 15px; font-weight: 500; }
-  .eleve-note {
-    width: 80px; padding: 10px 8px;
-    border: 1.5px solid var(--border);
-    border-radius: 8px; font-size: 16px;
-    text-align: center; font-weight: 600;
-    color: var(--text); margin-bottom: 0;
-  }
-  .eleve-note:focus { border-color: var(--blue); }
-  .eleve-note.valid { border-color: var(--green); background: #f0fdf4; }
-  .eleve-note.invalid { border-color: var(--red); background: #fef2f2; }
-
-  /* PROGRESS */
-  .progress-bar {
-    height: 4px; background: var(--border);
-    border-radius: 2px; margin-bottom: 16px; overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%; background: var(--green);
-    border-radius: 2px; transition: width 0.3s;
-  }
-  .progress-text {
-    font-size: 12px; color: var(--muted);
-    text-align: right; margin-bottom: 8px;
-  }
-
-  /* INFO BADGES */
-  .info-row {
-    display: flex; gap: 8px; flex-wrap: wrap;
-    margin-bottom: 16px;
-  }
-  .badge {
-    background: var(--gray); color: var(--muted);
-    padding: 6px 12px; border-radius: 20px;
-    font-size: 12px; font-weight: 500;
-  }
-  .badge.blue { background: #dbeafe; color: var(--blue); }
-  .badge.green { background: #dcfce7; color: var(--green); }
-
-  /* EXPORT */
-  .export-success {
-    text-align: center; padding: 20px;
-  }
-  .export-icon {
-    font-size: 48px; margin-bottom: 12px;
-  }
-  .export-success h3 { font-size: 20px; color: var(--text); margin-bottom: 8px; }
-  .export-success p { font-size: 14px; color: var(--muted); line-height: 1.5; }
-
-  /* ALERT */
-  .alert {
-    padding: 12px 16px; border-radius: 10px;
-    font-size: 13px; margin-bottom: 14px;
-    display: none;
-  }
-  .alert.error { background: #fef2f2; color: var(--red); border: 1px solid #fecaca; }
-  .alert.success { background: #f0fdf4; color: var(--green); border: 1px solid #bbf7d0; }
-  .alert.show { display: block; }
-
-  /* STICKY BOTTOM */
-  .bottom-bar {
-    position: sticky; bottom: 0;
-    background: white; padding: 16px 20px;
-    border-top: 1px solid var(--border);
-    max-width: 480px; margin: 0 auto;
-  }
-
-  .sep { height: 1px; background: var(--border); margin: 14px 0; }
-  
-  /* OFFLINE BADGE */
-  .offline-badge {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: #f0fdf4; color: var(--green);
-    border: 1px solid #bbf7d0;
-    padding: 6px 12px; border-radius: 20px;
-    font-size: 12px; font-weight: 500;
-    margin-bottom: 16px;
-  }
-
-  .mt8 { margin-top: 8px; }
-  .text-muted { font-size: 13px; color: var(--muted); }
-  .text-center { text-align: center; }
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+:root {
+  --blue: #1e4976; --blue2: #2563a8; --green: #16a34a;
+  --red: #dc2626; --gray: #f1f5f9; --border: #e2e8f0;
+  --text: #1e293b; --muted: #64748b; --white: #ffffff;
+}
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--gray); color: var(--text); min-height: 100vh; }
+.header { background: var(--blue); padding: 16px 20px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+.header-logo { width: 36px; height: 36px; background: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; color: var(--blue); }
+.header-title { color: white; }
+.header-title h1 { font-size: 18px; font-weight: 700; }
+.header-title p { font-size: 11px; opacity: 0.7; }
+.header-right { margin-left: auto; }
+.btn-logout { background: rgba(255,255,255,0.15); color: white; border: none; padding: 8px 14px; border-radius: 8px; font-size: 13px; cursor: pointer; }
+.screen { display: none; padding: 20px; max-width: 480px; margin: 0 auto; }
+.screen.active { display: block; }
+.card { background: white; border-radius: 14px; padding: 20px; margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+.card-title { font-size: 15px; font-weight: 600; color: var(--blue); margin-bottom: 14px; }
+label { display: block; font-size: 13px; font-weight: 500; color: var(--muted); margin-bottom: 6px; }
+input, select { width: 100%; padding: 13px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 15px; background: white; color: var(--text); margin-bottom: 14px; -webkit-appearance: none; appearance: none; }
+input:focus, select:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(30,73,118,0.1); }
+.btn { width: 100%; padding: 15px; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: transform 0.1s; margin-bottom: 10px; }
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--blue); color: white; }
+.btn-green { background: var(--green); color: white; }
+.btn-orange { background: #f59e0b; color: white; }
+.btn-outline { background: white; color: var(--blue); border: 2px solid var(--blue); }
+.btn-small { width: auto; padding: 8px 16px; font-size: 13px; border-radius: 8px; margin-bottom: 0; }
+.login-logo { text-align: center; padding: 40px 0 30px; }
+.login-logo .big-b { width: 72px; height: 72px; background: var(--blue); border-radius: 18px; display: inline-flex; align-items: center; justify-content: center; font-size: 36px; font-weight: 700; color: white; margin-bottom: 14px; }
+.login-logo h2 { font-size: 24px; color: var(--blue); }
+.login-logo p { font-size: 13px; color: var(--muted); margin-top: 4px; }
+.eleve-card { background: white; border-radius: 12px; padding: 16px; margin-bottom: 10px; border: 1.5px solid var(--border); display: flex; align-items: center; gap: 12px; }
+.eleve-num { width: 32px; height: 32px; background: var(--gray); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: var(--muted); flex-shrink: 0; }
+.eleve-name { flex: 1; font-size: 15px; font-weight: 500; }
+.eleve-note { width: 80px; padding: 10px 8px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 16px; text-align: center; font-weight: 600; margin-bottom: 0; }
+.eleve-note:focus { border-color: var(--blue); outline: none; }
+.eleve-note.valid { border-color: var(--green); background: #f0fdf4; }
+.eleve-note.invalid { border-color: var(--red); background: #fef2f2; }
+.progress-bar { height: 4px; background: var(--border); border-radius: 2px; margin-bottom: 16px; }
+.progress-fill { height: 100%; background: var(--green); border-radius: 2px; transition: width 0.3s; }
+.progress-text { font-size: 12px; color: var(--muted); text-align: right; margin-bottom: 8px; }
+.info-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.badge { background: var(--gray); color: var(--muted); padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; }
+.badge.blue { background: #dbeafe; color: var(--blue); }
+.badge.green { background: #dcfce7; color: var(--green); }
+.badge.orange { background: #fef3c7; color: #92400e; }
+.alert { padding: 12px 16px; border-radius: 10px; font-size: 13px; margin-bottom: 14px; display: none; }
+.alert.error { background: #fef2f2; color: var(--red); border: 1px solid #fecaca; }
+.alert.success { background: #f0fdf4; color: var(--green); border: 1px solid #bbf7d0; }
+.alert.show { display: block; }
+.offline-badge { display: inline-flex; align-items: center; gap: 6px; background: #f0fdf4; color: var(--green); border: 1px solid #bbf7d0; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; margin-bottom: 16px; }
+.sep { height: 1px; background: var(--border); margin: 14px 0; }
+.text-muted { font-size: 13px; color: var(--muted); }
+.text-center { text-align: center; }
+.bottom-bar { position: sticky; bottom: 0; background: white; padding: 16px 20px; border-top: 1px solid var(--border); max-width: 480px; margin: 0 auto; }
+.export-success { text-align: center; padding: 20px; }
+.export-icon { font-size: 48px; margin-bottom: 12px; }
+.config-status { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 14px; margin-bottom: 14px; }
+.config-status p { font-size: 13px; color: #15803d; margin: 2px 0; }
+.config-status .config-title { font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+.no-config { background: #fef9c3; border: 1px solid #fde68a; border-radius: 10px; padding: 14px; margin-bottom: 14px; }
+.no-config p { font-size: 13px; color: #92400e; }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <div class="header" id="mainHeader" style="display:none">
   <div class="header-logo">B</div>
   <div class="header-title">
@@ -262,14 +103,20 @@
     <input type="text" id="loginUsername" placeholder="Votre identifiant" autocomplete="username">
 
     <label>Mot de passe</label>
-    <input type="password" id="loginPassword" placeholder="Votre mot de passe" autocomplete="current-password">
-
-    <div class="sep"></div>
+    <input type="password" id="loginPassword" placeholder="Votre mot de passe">
 
     <label>Code établissement</label>
-    <input type="text" id="loginCode" placeholder="Code fourni par votre école" autocapitalize="characters">
+    <input type="text" id="loginCode" placeholder="Code fourni par le secrétaire" autocapitalize="characters" style="text-transform:uppercase">
 
     <button class="btn btn-primary" onclick="doLogin()">Se connecter</button>
+
+    <div class="sep"></div>
+    <div id="configStatus"></div>
+    <button class="btn btn-orange" onclick="document.getElementById('fileImport').click()">
+      📁 Importer config établissement
+    </button>
+    <input type="file" id="fileImport" accept=".json" style="display:none" onchange="importConfig(this)">
+    <p class="text-muted text-center" style="margin-top:8px">Importez une seule fois le fichier envoyé par le secrétaire</p>
   </div>
 
   <div class="text-center text-muted" style="padding: 20px 0;">
@@ -288,14 +135,13 @@
       <span class="badge blue" id="profMatiere"></span>
       <span class="badge green" id="profEtab"></span>
     </div>
-    <p class="text-muted">Sélectionnez une session de saisie pour commencer.</p>
   </div>
 
   <div class="card">
     <div class="card-title">📋 Nouvelle saisie</div>
 
     <label>Classe</label>
-    <select id="selClasse">
+    <select id="selClasse" onchange="updateEleves()">
       <option value="">— Sélectionnez —</option>
     </select>
 
@@ -326,7 +172,7 @@
   </div>
 
   <div class="card" id="sessionsSaved" style="display:none">
-    <div class="card-title">📦 Sessions sauvegardées</div>
+    <div class="card-title">📦 Sessions précédentes</div>
     <div id="sessionsList"></div>
   </div>
 </div>
@@ -338,116 +184,132 @@
     <div class="progress-text"><span id="progressCount">0</span> / <span id="progressTotal">0</span> notes saisies</div>
     <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
   </div>
-
   <div id="elevesContainer"></div>
-
-  <div style="height: 90px"></div>
+  <div style="height:90px"></div>
   <div class="bottom-bar">
     <button class="btn btn-green" onclick="saveSession()">💾 Sauvegarder et exporter</button>
+    <button class="btn btn-outline" onclick="showHome()" style="margin-top:8px">← Retour</button>
   </div>
 </div>
 
 <!-- SCREEN 4 : EXPORT -->
 <div class="screen" id="screenExport">
-  <div style="margin-top: 30px">
+  <div style="margin-top:30px">
     <div class="card">
       <div class="export-success">
         <div class="export-icon">✅</div>
         <h3>Notes sauvegardées !</h3>
-        <p>Envoyez le fichier au secrétaire par WhatsApp ou email pour qu'il importe les notes dans BulletinPro.</p>
+        <p style="margin-top:8px;color:#64748b">Envoyez le fichier au secrétaire par WhatsApp pour qu'il importe les notes dans BulletinPro PC.</p>
       </div>
-
       <div class="sep"></div>
-
-      <div class="card-title">📄 Fichier à envoyer</div>
-      <div style="background: #f8fafc; border-radius: 8px; padding: 12px; margin-bottom: 14px;">
-        <div style="font-size: 13px; color: var(--muted);">Nom du fichier</div>
-        <div style="font-size: 15px; font-weight: 600; color: var(--text);" id="exportFileName"></div>
+      <div style="background:#f8fafc;border-radius:8px;padding:12px;margin-bottom:14px;">
+        <div style="font-size:12px;color:#64748b">Fichier à envoyer</div>
+        <div style="font-size:15px;font-weight:600;" id="exportFileName"></div>
       </div>
-
-      <button class="btn btn-primary" onclick="downloadJson()" style="margin-bottom: 10px;">
-        📥 Télécharger le fichier
-      </button>
-      <button class="btn btn-outline" onclick="goHome()">
-        ← Nouvelle saisie
-      </button>
+      <button class="btn btn-primary" onclick="downloadJson()">📥 Télécharger le fichier</button>
+      <button class="btn btn-outline" onclick="goHome()">← Nouvelle saisie</button>
     </div>
   </div>
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════════
-// DONNÉES DE CONFIGURATION — À PERSONNALISER PAR L'ÉCOLE
-// ═══════════════════════════════════════════════════════
-
-// Hash SHA-256 simple pour vérification locale
-async function sha256(message) {
-  const msgBuffer = new TextEncoder().encode(message);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+// ═══════════════════════════════════════
+// SÉCURITÉ — HASH SHA-256
+// ═══════════════════════════════════════
+async function sha256(msg) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
 }
 
-// Données école chargées depuis le fichier de config
 let CONFIG = null;
-let currentSession = null;
 let currentUser = null;
+let currentSession = null;
 let exportData = null;
 
-// Charger la config depuis le localStorage (importée par le secrétaire)
-function loadConfig() {
-  const saved = localStorage.getItem('bulletinpro_config');
-  if (saved) {
-    CONFIG = JSON.parse(saved);
-    return true;
-  }
-  // Config démo si pas de config importée
-  CONFIG = {
-    etablissement: "Etablissement Demo",
-    code: "DEMO2026",
-    users: [
-      { username: "prof1", password_hash: "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3", nom: "Professeur Demo", matieres: ["Mathématiques", "Sciences"] }
-    ],
-    classes: ["6ème A", "6ème B", "5ème A", "4ème A", "3ème A"],
-    matieres: ["Mathématiques", "Français", "Sciences", "Histoire-Géo", "Anglais", "EPS", "Physique", "Chimie"],
-    eleves: {
-      "6ème A": ["DIALLO Mamadou", "BAH Fatoumata", "SOW Ibrahim", "BARRY Aissatou", "CAMARA Oumar", "SYLLA Mariama"],
-      "6ème B": ["CONDE Ibrahima", "TOURE Aminata", "BALDE Moussa", "KEITA Fanta"],
-      "5ème A": ["DIALLO Alpha", "BAH Kadiatou", "SOW Mamadou", "BARRY Oumar"],
-      "4ème A": ["CAMARA Fatoumata", "SYLLA Ibrahima", "CONDE Mariama"],
-      "3ème A": ["TOURE Moussa", "BALDE Aminata", "KEITA Ibrahima"]
+// ═══════════════════════════════════════
+// IMPORT CONFIG ÉTABLISSEMENT
+// ═══════════════════════════════════════
+function importConfig(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (data.type !== 'bulletinpro_config') {
+        alert('Ce fichier n\'est pas une config BulletinPro valide.'); return;
+      }
+      localStorage.setItem('bulletinpro_config', JSON.stringify(data));
+      CONFIG = data;
+      updateConfigStatus();
+      alert(`✅ Configuration importée !\n\nÉtablissement : ${data.etablissement}\nClasses : ${data.classes.length}\nCode : ${data.code}\n\nVous pouvez maintenant vous connecter.`);
+    } catch(err) {
+      alert('Fichier invalide : ' + err.message);
     }
   };
+  reader.readAsText(file);
+  input.value = '';
+}
+
+function updateConfigStatus() {
+  const el = document.getElementById('configStatus');
+  if (CONFIG && CONFIG.etablissement) {
+    el.innerHTML = `
+      <div class="config-status">
+        <p class="config-title">✅ Config importée</p>
+        <p>📚 ${CONFIG.etablissement}</p>
+        <p>🏫 ${CONFIG.classes.length} classe(s) · ${CONFIG.users.length} professeur(s)</p>
+        <p>📅 ${CONFIG.generated || ''}</p>
+      </div>`;
+  } else {
+    el.innerHTML = `
+      <div class="no-config">
+        <p>⚠️ Aucune configuration importée.</p>
+        <p>Importez le fichier envoyé par le secrétaire.</p>
+      </div>`;
+  }
+}
+
+function loadConfig() {
+  const saved = localStorage.getItem('bulletinpro_config');
+  if (saved) { CONFIG = JSON.parse(saved); return true; }
   return false;
 }
 
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // AUTHENTIFICATION
-// ═══════════════════════════════════════════════════════
-
+// ═══════════════════════════════════════
 async function doLogin() {
   const username = document.getElementById('loginUsername').value.trim();
   const password = document.getElementById('loginPassword').value;
   const code = document.getElementById('loginCode').value.trim().toUpperCase();
   const errEl = document.getElementById('loginError');
-
   errEl.className = 'alert error';
-  errEl.style.display = 'none';
 
   if (!username || !password || !code) {
     errEl.textContent = 'Veuillez remplir tous les champs.';
     errEl.className = 'alert error show'; return;
   }
 
-  loadConfig();
+  if (!CONFIG) {
+    errEl.textContent = 'Importez d\'abord la config établissement.';
+    errEl.className = 'alert error show'; return;
+  }
 
-  // Vérifier code établissement
   if (code !== CONFIG.code) {
     errEl.textContent = 'Code établissement incorrect.';
     errEl.className = 'alert error show'; return;
   }
 
-  // Vérifier utilisateur
+  // Blocage tentatives
+  let fails = parseInt(sessionStorage.getItem('login_fails') || '0');
+  const lockUntil = parseInt(sessionStorage.getItem('login_lock') || '0');
+  if (Date.now() < lockUntil) {
+    const secs = Math.ceil((lockUntil - Date.now()) / 1000);
+    errEl.textContent = `Trop de tentatives. Attendez ${secs} secondes.`;
+    errEl.className = 'alert error show'; return;
+  }
+
   const pwHash = await sha256(password);
   const user = CONFIG.users.find(u =>
     u.username.toLowerCase() === username.toLowerCase() &&
@@ -455,32 +317,25 @@ async function doLogin() {
   );
 
   if (!user) {
-    // Tentatives échouées
-    let fails = parseInt(sessionStorage.getItem('login_fails') || '0') + 1;
+    fails++;
     sessionStorage.setItem('login_fails', fails);
     if (fails >= 3) {
-      errEl.textContent = `Trop de tentatives. Attendez 30 secondes.`;
-      errEl.className = 'alert error show';
-      document.querySelector('.btn-primary').disabled = true;
-      setTimeout(() => {
-        document.querySelector('.btn-primary').disabled = false;
-        sessionStorage.removeItem('login_fails');
-      }, 30000);
-      return;
+      sessionStorage.setItem('login_lock', Date.now() + 30000);
+      sessionStorage.setItem('login_fails', '0');
     }
-    errEl.textContent = `Identifiant ou mot de passe incorrect. (${fails}/3)`;
+    errEl.textContent = `Identifiant ou mot de passe incorrect. (${Math.min(fails,3)}/3)`;
     errEl.className = 'alert error show'; return;
   }
 
   sessionStorage.removeItem('login_fails');
+  sessionStorage.removeItem('login_lock');
   currentUser = user;
   showHome();
 }
 
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // NAVIGATION
-// ═══════════════════════════════════════════════════════
-
+// ═══════════════════════════════════════
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -489,29 +344,30 @@ function showScreen(id) {
 function showHome() {
   document.getElementById('mainHeader').style.display = 'flex';
   document.getElementById('profName').textContent = currentUser.nom;
-  document.getElementById('profMatiere').textContent = currentUser.matieres.join(', ');
+  document.getElementById('profMatiere').textContent = (currentUser.matieres || []).join(', ');
   document.getElementById('profEtab').textContent = CONFIG.etablissement;
+  document.getElementById('headerSub').textContent = 'Accueil';
 
-  // Remplir les selects
+  // Remplir classes
   const selClasse = document.getElementById('selClasse');
   selClasse.innerHTML = '<option value="">— Sélectionnez —</option>';
   CONFIG.classes.forEach(c => {
     selClasse.innerHTML += `<option value="${c}">${c}</option>`;
   });
 
+  // Remplir matières
   const selMatiere = document.getElementById('selMatiere');
   selMatiere.innerHTML = '<option value="">— Sélectionnez —</option>';
-  (currentUser.matieres || CONFIG.matieres).forEach(m => {
+  (currentUser.matieres || CONFIG.matieres || []).forEach(m => {
     selMatiere.innerHTML += `<option value="${m}">${m}</option>`;
   });
 
   loadSavedSessions();
   showScreen('screenHome');
-  document.getElementById('headerSub').textContent = 'Accueil';
 }
 
 function logout() {
-  if (confirm('Voulez-vous vous déconnecter ?')) {
+  if (confirm('Se déconnecter ?')) {
     currentUser = null;
     document.getElementById('mainHeader').style.display = 'none';
     document.getElementById('loginUsername').value = '';
@@ -522,9 +378,10 @@ function logout() {
 
 function goHome() { showHome(); }
 
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // SAISIE DES NOTES
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════
+function updateEleves() { /* Pour usage futur */ }
 
 function startSaisie() {
   const classe = document.getElementById('selClasse').value;
@@ -537,7 +394,8 @@ function startSaisie() {
     alert('Veuillez remplir tous les champs.'); return;
   }
 
-  const eleves = CONFIG.eleves[classe] || [];
+  // Élèves de la classe sélectionnée
+  const eleves = (CONFIG.eleves && CONFIG.eleves[classe]) ? CONFIG.eleves[classe] : [];
   if (eleves.length === 0) {
     alert('Aucun élève trouvé pour cette classe.'); return;
   }
@@ -548,7 +406,7 @@ function startSaisie() {
     <span class="badge blue">${classe}</span>
     <span class="badge blue">${matiere}</span>
     <span class="badge green">${periode}</span>
-    <span class="badge">${type}</span>
+    <span class="badge orange">${type}</span>
   `;
   document.getElementById('headerSub').textContent = `${matiere} — ${classe}`;
   document.getElementById('progressTotal').textContent = eleves.length;
@@ -562,11 +420,10 @@ function startSaisie() {
     div.innerHTML = `
       <div class="eleve-num">${i+1}</div>
       <div class="eleve-name">${eleve}</div>
-      <input type="number" class="eleve-note" 
-        id="note_${i}" 
-        placeholder="—" 
+      <input type="number" class="eleve-note"
+        id="note_${i}" placeholder="—"
         min="0" max="20" step="0.25"
-        oninput="onNoteChange(${i}, '${eleve}', this)"
+        oninput="onNoteChange(${i}, '${eleve.replace(/'/g,"\\'")}', this)"
         onfocus="this.select()">
     `;
     container.appendChild(div);
@@ -598,32 +455,25 @@ function updateProgress() {
   document.getElementById('progressFill').style.width = `${(done/total)*100}%`;
 }
 
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // SAUVEGARDE ET EXPORT
-// ═══════════════════════════════════════════════════════
-
+// ═══════════════════════════════════════
 function saveSession() {
   const notes = currentSession.notes;
   const total = currentSession.eleves.length;
   const saisies = Object.keys(notes).length;
 
-  if (saisies === 0) {
-    alert('Aucune note saisie.'); return;
-  }
+  if (saisies === 0) { alert('Aucune note saisie.'); return; }
 
   if (saisies < total) {
-    const manquantes = total - saisies;
-    if (!confirm(`${manquantes} élève(s) sans note (absent(s) ?). Continuer quand même ?`)) return;
+    if (!confirm(`${total - saisies} élève(s) sans note (absent(s) ?). Continuer ?`)) return;
   }
 
   const now = new Date();
-  const timestamp = now.toISOString();
-  const dateStr = now.toLocaleDateString('fr-FR');
-
   exportData = {
     version: "1.0",
     type: "bulletinpro_notes",
-    timestamp,
+    timestamp: now.toISOString(),
     etablissement: CONFIG.etablissement,
     professeur: currentUser.nom,
     username: currentUser.username,
@@ -633,15 +483,13 @@ function saveSession() {
       classe: currentSession.classe,
       matiere: currentSession.matiere,
       periode: currentSession.periode,
-      date: dateStr,
+      date: now.toLocaleDateString('fr-FR'),
     },
     notes: currentSession.eleves.map(eleve => ({
-      eleve,
-      note: notes[eleve] !== undefined ? notes[eleve] : null
+      eleve, note: notes[eleve] !== undefined ? notes[eleve] : null
     })),
     stats: {
-      total,
-      saisies,
+      total, saisies,
       absents: total - saisies,
       moyenne: saisies > 0 ?
         Math.round(Object.values(notes).reduce((a,b) => a+b, 0) / saisies * 100) / 100 : null
@@ -650,48 +498,38 @@ function saveSession() {
 
   // Sauvegarder localement
   const sessions = JSON.parse(localStorage.getItem('bulletinpro_sessions') || '[]');
-  sessions.push({ ...exportData, saved: true });
+  sessions.push(exportData);
   localStorage.setItem('bulletinpro_sessions', JSON.stringify(sessions.slice(-20)));
 
   const fileName = `BP_${currentSession.classe}_${currentSession.matiere}_${currentSession.periode}_${currentSession.nom}.json`
     .replace(/[^a-zA-Z0-9_.\-]/g, '_');
-
-  document.getElementById('exportFileName').textContent = fileName;
   exportData._fileName = fileName;
-
+  document.getElementById('exportFileName').textContent = fileName;
   showScreen('screenExport');
   document.getElementById('headerSub').textContent = 'Export';
 }
 
 function downloadJson() {
-  const json = JSON.stringify(exportData, null, 2);
-  const blob = new Blob([json], { type: 'application/json' });
+  const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url;
-  a.download = exportData._fileName;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  a.href = url; a.download = exportData._fileName;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
 }
 
-// ═══════════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // SESSIONS SAUVEGARDÉES
-// ═══════════════════════════════════════════════════════
-
+// ═══════════════════════════════════════
 function loadSavedSessions() {
   const sessions = JSON.parse(localStorage.getItem('bulletinpro_sessions') || '[]');
   const container = document.getElementById('sessionsSaved');
   const list = document.getElementById('sessionsList');
-
-  if (sessions.length === 0) {
-    container.style.display = 'none'; return;
-  }
-
+  if (sessions.length === 0) { container.style.display = 'none'; return; }
   container.style.display = 'block';
   list.innerHTML = '';
   sessions.slice(-5).reverse().forEach((s, i) => {
+    const idx = sessions.length - 1 - i;
     const div = document.createElement('div');
     div.style = 'padding:10px 0; border-bottom:1px solid #f1f5f9; display:flex; align-items:center; gap:10px;';
     div.innerHTML = `
@@ -699,7 +537,7 @@ function loadSavedSessions() {
         <div style="font-size:14px;font-weight:500">${s.evaluation.nom} — ${s.evaluation.classe}</div>
         <div style="font-size:12px;color:#64748b">${s.evaluation.matiere} · ${s.evaluation.periode} · ${s.stats.saisies} notes</div>
       </div>
-      <button class="btn btn-outline btn-small" onclick="reexport(${sessions.length-1-i})">Re-exporter</button>
+      <button class="btn btn-outline btn-small" onclick="reexport(${idx})">Re-exporter</button>
     `;
     list.appendChild(div);
   });
@@ -708,15 +546,15 @@ function loadSavedSessions() {
 function reexport(idx) {
   const sessions = JSON.parse(localStorage.getItem('bulletinpro_sessions') || '[]');
   exportData = sessions[idx];
-  const fileName = `BP_${exportData.evaluation.classe}_${exportData.evaluation.matiere}_${exportData.evaluation.periode}.json`
-    .replace(/[^a-zA-Z0-9_.\-]/g, '_');
-  exportData._fileName = fileName;
-  document.getElementById('exportFileName').textContent = fileName;
+  const fn = `BP_${exportData.evaluation.classe}_${exportData.evaluation.matiere}_${exportData.evaluation.periode}.json`.replace(/[^a-zA-Z0-9_.\-]/g, '_');
+  exportData._fileName = fn;
+  document.getElementById('exportFileName').textContent = fn;
   showScreen('screenExport');
 }
 
 // Init
 loadConfig();
+updateConfigStatus();
 </script>
 </body>
 </html>
