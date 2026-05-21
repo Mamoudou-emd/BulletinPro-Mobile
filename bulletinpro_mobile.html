@@ -11,9 +11,9 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 :root {
-  --blue: #1e4976; --blue2: #2563a8; --green: #16a34a;
-  --red: #dc2626; --gray: #f1f5f9; --border: #e2e8f0;
-  --text: #1e293b; --muted: #64748b; --white: #ffffff;
+  --blue: #1e4976; --green: #16a34a; --red: #dc2626;
+  --gray: #f1f5f9; --border: #e2e8f0; --text: #1e293b;
+  --muted: #64748b; --white: #ffffff;
 }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--gray); color: var(--text); min-height: 100vh; }
 .header { background: var(--blue); padding: 16px 20px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
@@ -30,6 +30,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 label { display: block; font-size: 13px; font-weight: 500; color: var(--muted); margin-bottom: 6px; }
 input, select { width: 100%; padding: 13px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 15px; background: white; color: var(--text); margin-bottom: 14px; -webkit-appearance: none; appearance: none; }
 input:focus, select:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(30,73,118,0.1); }
+.pwd-wrap { position: relative; }
+.pwd-wrap input { padding-right: 70px; }
+.pwd-toggle { position: absolute; right: 12px; top: 13px; background: none; border: none; color: var(--muted); font-size: 13px; font-weight: 500; cursor: pointer; }
 .btn { width: 100%; padding: 15px; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: transform 0.1s; margin-bottom: 10px; }
 .btn:active { transform: scale(0.98); }
 .btn-primary { background: var(--blue); color: white; }
@@ -65,13 +68,11 @@ input:focus, select:focus { outline: none; border-color: var(--blue); box-shadow
 .text-muted { font-size: 13px; color: var(--muted); }
 .text-center { text-align: center; }
 .bottom-bar { position: sticky; bottom: 0; background: white; padding: 16px 20px; border-top: 1px solid var(--border); max-width: 480px; margin: 0 auto; }
-.export-success { text-align: center; padding: 20px; }
-.export-icon { font-size: 48px; margin-bottom: 12px; }
 .config-status { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 14px; margin-bottom: 14px; }
 .config-status p { font-size: 13px; color: #15803d; margin: 2px 0; }
 .config-status .config-title { font-weight: 600; font-size: 14px; margin-bottom: 6px; }
-.no-config { background: #fef9c3; border: 1px solid #fde68a; border-radius: 10px; padding: 14px; margin-bottom: 14px; }
-.no-config p { font-size: 13px; color: #92400e; }
+.info-box { background: #dbeafe; border-radius: 8px; padding: 14px; margin-bottom: 14px; }
+.info-box p { font-size: 13px; color: #1e4976; margin: 2px 0; }
 </style>
 </head>
 <body>
@@ -80,19 +81,21 @@ input:focus, select:focus { outline: none; border-color: var(--blue); box-shadow
   <div class="header-logo">B</div>
   <div class="header-title">
     <h1>BulletinPro</h1>
-    <p id="headerSub">Saisie des notes</p>
+    <p id="headerSub">Accueil</p>
   </div>
   <div class="header-right">
     <button class="btn-logout" onclick="logout()">Déconnexion</button>
   </div>
 </div>
 
-<!-- SCREEN 1 : LOGIN -->
+<!-- ══════════════════════════════════════ -->
+<!-- SCREEN 1 : LOGIN                       -->
+<!-- ══════════════════════════════════════ -->
 <div class="screen active" id="screenLogin">
   <div class="login-logo">
     <div class="big-b">B</div>
     <h2>BulletinPro</h2>
-    <p>Saisie des notes — Professeurs</p>
+    <p>Espace professeurs</p>
   </div>
 
   <div class="card">
@@ -103,31 +106,49 @@ input:focus, select:focus { outline: none; border-color: var(--blue); box-shadow
     <input type="text" id="loginUsername" placeholder="Votre identifiant" autocomplete="username">
 
     <label>Mot de passe</label>
-    <input type="password" id="loginPassword" placeholder="Votre mot de passe">
-
-    <label>Code établissement</label>
-    <input type="text" id="loginCode" placeholder="Code fourni par le secrétaire" autocapitalize="characters" style="text-transform:uppercase">
+    <div class="pwd-wrap">
+      <input type="password" id="loginPassword" placeholder="Votre mot de passe">
+      <button class="pwd-toggle" onclick="togglePwd('loginPassword',this)">Voir</button>
+    </div>
 
     <button class="btn btn-primary" onclick="doLogin()">Se connecter</button>
 
-    <div class="sep"></div>
-    <div id="configStatus"></div>
-    <button class="btn btn-orange" onclick="document.getElementById('fileImport').click()">
-      📁 Importer config établissement
-    </button>
-    <input type="file" id="fileImport" accept=".json" style="display:none" onchange="importConfig(this)">
-    <p class="text-muted text-center" style="margin-top:8px">Importez une seule fois le fichier envoyé par le secrétaire</p>
+    <div class="text-center" style="margin-top:6px">
+      <a href="#" onclick="showForgotPwd()" style="color:var(--blue);font-size:13px;text-decoration:none">Mot de passe oublié ?</a>
+    </div>
   </div>
 
-  <div class="text-center text-muted" style="padding: 20px 0;">
-    <div class="offline-badge">✅ Fonctionne sans internet</div>
-    <p>BulletinPro v1.0 — Diallo Elhadj Mamoudou</p>
+
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SCREEN 2 : MOT DE PASSE OUBLIÉ        -->
+<!-- ══════════════════════════════════════ -->
+<div class="screen" id="screenForgotPwd">
+  <div style="margin-top:16px">
+    <div class="card">
+      <div class="card-title">🔒 Mot de passe oublié</div>
+
+      <div class="info-box">
+        <p style="font-weight:600;margin-bottom:6px">Comment réinitialiser ?</p>
+        <p>1. Contactez votre secrétaire</p>
+        <p>2. Il réinitialise votre mot de passe dans BulletinPro PC</p>
+        <p>3. Il vous envoie un nouveau fichier de données</p>
+        <p>4. Importez-le depuis votre accueil</p>
+      </div>
+
+      <div id="forgotEtabInfo"></div>
+
+      <button class="btn btn-outline" onclick="showScreen('screenLogin')">← Retour</button>
+    </div>
   </div>
 </div>
 
-<!-- SCREEN 2 : ACCUEIL PROF -->
+<!-- ══════════════════════════════════════ -->
+<!-- SCREEN 3 : ACCUEIL PROF               -->
+<!-- ══════════════════════════════════════ -->
 <div class="screen" id="screenHome">
-  <div class="offline-badge" style="margin-top:16px">✅ Mode hors ligne actif</div>
+  
 
   <div class="card">
     <div class="card-title">👤 Bonjour, <span id="profName"></span></div>
@@ -141,7 +162,7 @@ input:focus, select:focus { outline: none; border-color: var(--blue); box-shadow
     <div class="card-title">📋 Nouvelle saisie</div>
 
     <label>Classe</label>
-    <select id="selClasse" onchange="updateEleves()">
+    <select id="selClasse">
       <option value="">— Sélectionnez —</option>
     </select>
 
@@ -175,9 +196,74 @@ input:focus, select:focus { outline: none; border-color: var(--blue); box-shadow
     <div class="card-title">📦 Sessions précédentes</div>
     <div id="sessionsList"></div>
   </div>
+
+  <div class="card">
+    <div class="card-title">⚙️ Mon compte</div>
+    <button class="btn btn-orange" onclick="showImportConfig()">📁 Importer vos données scolaires</button>
+    <button class="btn btn-outline" onclick="showChangePwd()">🔑 Modifier mon mot de passe</button>
+  </div>
 </div>
 
-<!-- SCREEN 3 : SAISIE NOTES -->
+<!-- ══════════════════════════════════════ -->
+<!-- SCREEN 4 : IMPORT CONFIG              -->
+<!-- ══════════════════════════════════════ -->
+<div class="screen" id="screenImport">
+  <div style="margin-top:16px">
+    <div class="card">
+      <div class="card-title">📁 Importer vos données scolaires</div>
+
+      <div id="currentConfigInfo"></div>
+
+      <p class="text-muted" style="margin-bottom:14px">Importez le fichier envoyé par votre secrétaire. Cette opération met à jour vos classes et élèves.</p>
+
+      <button class="btn btn-orange" onclick="document.getElementById('fileImport').click()">
+        Choisir le fichier
+      </button>
+      <input type="file" id="fileImport" accept=".json" style="display:none" onchange="importConfig(this)">
+
+      <div class="sep"></div>
+      <button class="btn btn-outline" onclick="showHome()">← Retour</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SCREEN 5 : CHANGER MOT DE PASSE       -->
+<!-- ══════════════════════════════════════ -->
+<div class="screen" id="screenChangePwd">
+  <div style="margin-top:16px">
+    <div class="card">
+      <div class="card-title">🔑 Modifier mon mot de passe</div>
+      <div class="alert error" id="pwdError"></div>
+      <div class="alert success" id="pwdSuccess"></div>
+
+      <label>Ancien mot de passe</label>
+      <div class="pwd-wrap">
+        <input type="password" id="oldPwd" placeholder="Votre mot de passe actuel">
+        <button class="pwd-toggle" onclick="togglePwd('oldPwd',this)">Voir</button>
+      </div>
+
+      <label>Nouveau mot de passe</label>
+      <div class="pwd-wrap">
+        <input type="password" id="newPwd" placeholder="Minimum 8 caractères">
+        <button class="pwd-toggle" onclick="togglePwd('newPwd',this)">Voir</button>
+      </div>
+
+      <label>Confirmer le nouveau mot de passe</label>
+      <div class="pwd-wrap">
+        <input type="password" id="confirmPwd" placeholder="Répétez le nouveau mot de passe">
+        <button class="pwd-toggle" onclick="togglePwd('confirmPwd',this)">Voir</button>
+      </div>
+
+      <button class="btn btn-green" onclick="doChangePwd()">Enregistrer</button>
+      <button class="btn btn-outline" onclick="showHome()">← Retour</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SCREEN 6 : SAISIE NOTES               -->
+<!-- ══════════════════════════════════════ -->
 <div class="screen" id="screenSaisie">
   <div style="margin-top:16px">
     <div class="info-row" id="saisieInfo"></div>
@@ -192,29 +278,31 @@ input:focus, select:focus { outline: none; border-color: var(--blue); box-shadow
   </div>
 </div>
 
-<!-- SCREEN 4 : EXPORT -->
+<!-- ══════════════════════════════════════ -->
+<!-- SCREEN 7 : EXPORT                     -->
+<!-- ══════════════════════════════════════ -->
 <div class="screen" id="screenExport">
   <div style="margin-top:30px">
     <div class="card">
-      <div class="export-success">
-        <div class="export-icon">✅</div>
-        <h3>Notes sauvegardées !</h3>
-        <p style="margin-top:8px;color:#64748b">Envoyez le fichier au secrétaire par WhatsApp pour qu'il importe les notes dans BulletinPro PC.</p>
+      <div style="text-align:center;padding:20px">
+        <div style="font-size:48px;margin-bottom:12px">✅</div>
+        <h3 style="font-size:20px;margin-bottom:8px">Notes sauvegardées !</h3>
+        <p style="font-size:14px;color:var(--muted)">Envoyez le fichier au secrétaire par WhatsApp.</p>
       </div>
       <div class="sep"></div>
       <div style="background:#f8fafc;border-radius:8px;padding:12px;margin-bottom:14px;">
-        <div style="font-size:12px;color:#64748b">Fichier à envoyer</div>
+        <div style="font-size:12px;color:var(--muted)">Fichier à envoyer</div>
         <div style="font-size:15px;font-weight:600;" id="exportFileName"></div>
       </div>
       <button class="btn btn-primary" onclick="downloadJson()">📥 Télécharger le fichier</button>
-      <button class="btn btn-outline" onclick="goHome()">← Nouvelle saisie</button>
+      <button class="btn btn-outline" onclick="showHome()">← Nouvelle saisie</button>
     </div>
   </div>
 </div>
 
 <script>
 // ═══════════════════════════════════════
-// SÉCURITÉ — HASH SHA-256
+// HASH SHA-256
 // ═══════════════════════════════════════
 async function sha256(msg) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
@@ -227,8 +315,14 @@ let currentSession = null;
 let exportData = null;
 
 // ═══════════════════════════════════════
-// IMPORT CONFIG ÉTABLISSEMENT
+// CONFIG
 // ═══════════════════════════════════════
+function loadConfig() {
+  const saved = localStorage.getItem('bulletinpro_config');
+  if (saved) { CONFIG = JSON.parse(saved); return true; }
+  return false;
+}
+
 function importConfig(input) {
   const file = input.files[0];
   if (!file) return;
@@ -237,12 +331,12 @@ function importConfig(input) {
     try {
       const data = JSON.parse(e.target.result);
       if (data.type !== 'bulletinpro_config') {
-        alert('Ce fichier n\'est pas une config BulletinPro valide.'); return;
+        alert('Ce fichier n\'est pas valide.'); return;
       }
       localStorage.setItem('bulletinpro_config', JSON.stringify(data));
       CONFIG = data;
-      updateConfigStatus();
-      alert(`✅ Configuration importée !\n\nÉtablissement : ${data.etablissement}\nClasses : ${data.classes.length}\nCode : ${data.code}\n\nVous pouvez maintenant vous connecter.`);
+      alert(`✅ Données importées !\n\n${data.etablissement}\n${data.classes.length} classe(s) importée(s)`);
+      showHome();
     } catch(err) {
       alert('Fichier invalide : ' + err.message);
     }
@@ -251,62 +345,31 @@ function importConfig(input) {
   input.value = '';
 }
 
-function updateConfigStatus() {
-  const el = document.getElementById('configStatus');
-  if (CONFIG && CONFIG.etablissement) {
-    el.innerHTML = `
-      <div class="config-status">
-        <p class="config-title">✅ Config importée</p>
-        <p>📚 ${CONFIG.etablissement}</p>
-        <p>🏫 ${CONFIG.classes.length} classe(s) · ${CONFIG.users.length} professeur(s)</p>
-        <p>📅 ${CONFIG.generated || ''}</p>
-      </div>`;
-  } else {
-    el.innerHTML = `
-      <div class="no-config">
-        <p>⚠️ Aucune configuration importée.</p>
-        <p>Importez le fichier envoyé par le secrétaire.</p>
-      </div>`;
-  }
-}
-
-function loadConfig() {
-  const saved = localStorage.getItem('bulletinpro_config');
-  if (saved) { CONFIG = JSON.parse(saved); return true; }
-  return false;
-}
-
 // ═══════════════════════════════════════
 // AUTHENTIFICATION
 // ═══════════════════════════════════════
 async function doLogin() {
   const username = document.getElementById('loginUsername').value.trim();
   const password = document.getElementById('loginPassword').value;
-  const code = document.getElementById('loginCode').value.trim().toUpperCase();
   const errEl = document.getElementById('loginError');
   errEl.className = 'alert error';
 
-  if (!username || !password || !code) {
-    errEl.textContent = 'Veuillez remplir tous les champs.';
+  if (!username || !password) {
+    errEl.textContent = 'Remplissez tous les champs.';
     errEl.className = 'alert error show'; return;
   }
 
   if (!CONFIG) {
-    errEl.textContent = 'Importez d\'abord la config établissement.';
-    errEl.className = 'alert error show'; return;
-  }
-
-  if (code !== CONFIG.code) {
-    errEl.textContent = 'Code établissement incorrect.';
+    errEl.textContent = 'Aucune donnée scolaire. Connectez-vous d\'abord puis importez vos données depuis "Mon compte".';
     errEl.className = 'alert error show'; return;
   }
 
   // Blocage tentatives
-  let fails = parseInt(sessionStorage.getItem('login_fails') || '0');
+  const fails = parseInt(sessionStorage.getItem('login_fails') || '0');
   const lockUntil = parseInt(sessionStorage.getItem('login_lock') || '0');
   if (Date.now() < lockUntil) {
     const secs = Math.ceil((lockUntil - Date.now()) / 1000);
-    errEl.textContent = `Trop de tentatives. Attendez ${secs} secondes.`;
+    errEl.textContent = `Trop de tentatives. Attendez ${secs}s.`;
     errEl.className = 'alert error show'; return;
   }
 
@@ -317,13 +380,13 @@ async function doLogin() {
   );
 
   if (!user) {
-    fails++;
-    sessionStorage.setItem('login_fails', fails);
-    if (fails >= 3) {
+    const newFails = fails + 1;
+    sessionStorage.setItem('login_fails', newFails);
+    if (newFails >= 3) {
       sessionStorage.setItem('login_lock', Date.now() + 30000);
       sessionStorage.setItem('login_fails', '0');
     }
-    errEl.textContent = `Identifiant ou mot de passe incorrect. (${Math.min(fails,3)}/3)`;
+    errEl.textContent = `Identifiant ou mot de passe incorrect. (${Math.min(newFails,3)}/3)`;
     errEl.className = 'alert error show'; return;
   }
 
@@ -345,25 +408,54 @@ function showHome() {
   document.getElementById('mainHeader').style.display = 'flex';
   document.getElementById('profName').textContent = currentUser.nom;
   document.getElementById('profMatiere').textContent = (currentUser.matieres || []).join(', ');
-  document.getElementById('profEtab').textContent = CONFIG.etablissement;
+  document.getElementById('profEtab').textContent = CONFIG ? CONFIG.etablissement : '';
   document.getElementById('headerSub').textContent = 'Accueil';
 
-  // Remplir classes
   const selClasse = document.getElementById('selClasse');
   selClasse.innerHTML = '<option value="">— Sélectionnez —</option>';
-  CONFIG.classes.forEach(c => {
+  if (CONFIG) CONFIG.classes.forEach(c => {
     selClasse.innerHTML += `<option value="${c}">${c}</option>`;
   });
 
-  // Remplir matières
   const selMatiere = document.getElementById('selMatiere');
   selMatiere.innerHTML = '<option value="">— Sélectionnez —</option>';
-  (currentUser.matieres || CONFIG.matieres || []).forEach(m => {
+  (currentUser.matieres || (CONFIG ? CONFIG.matieres : []) || []).forEach(m => {
     selMatiere.innerHTML += `<option value="${m}">${m}</option>`;
   });
 
   loadSavedSessions();
   showScreen('screenHome');
+}
+
+function showImportConfig() {
+  const el = document.getElementById('currentConfigInfo');
+  if (CONFIG && CONFIG.etablissement) {
+    el.innerHTML = `<div class="config-status">
+      <p class="config-title">✅ Données actuelles</p>
+      <p>📚 ${CONFIG.etablissement}</p>
+      <p>🏫 ${CONFIG.classes.length} classe(s) · Importé le ${CONFIG.generated || ''}</p>
+    </div>`;
+  } else { el.innerHTML = ''; }
+  document.getElementById('headerSub').textContent = 'Importer données';
+  showScreen('screenImport');
+}
+
+function showForgotPwd() {
+  const el = document.getElementById('forgotEtabInfo');
+  if (CONFIG && CONFIG.etablissement) {
+    el.innerHTML = `<div class="info-box"><p>📚 ${CONFIG.etablissement}</p></div>`;
+  } else { el.innerHTML = ''; }
+  showScreen('screenForgotPwd');
+}
+
+function showChangePwd() {
+  document.getElementById('oldPwd').value = '';
+  document.getElementById('newPwd').value = '';
+  document.getElementById('confirmPwd').value = '';
+  document.getElementById('pwdError').className = 'alert error';
+  document.getElementById('pwdSuccess').className = 'alert success';
+  document.getElementById('headerSub').textContent = 'Mot de passe';
+  showScreen('screenChangePwd');
 }
 
 function logout() {
@@ -376,13 +468,73 @@ function logout() {
   }
 }
 
-function goHome() { showHome(); }
+// ═══════════════════════════════════════
+// UTILITAIRES
+// ═══════════════════════════════════════
+function togglePwd(fieldId, btn) {
+  const input = document.getElementById(fieldId);
+  input.type = input.type === 'password' ? 'text' : 'password';
+  btn.textContent = input.type === 'password' ? 'Voir' : 'Cacher';
+}
+
+// ═══════════════════════════════════════
+// CHANGER MOT DE PASSE
+// ═══════════════════════════════════════
+async function doChangePwd() {
+  const oldPwd = document.getElementById('oldPwd').value;
+  const newPwd = document.getElementById('newPwd').value;
+  const confirmPwd = document.getElementById('confirmPwd').value;
+  const errEl = document.getElementById('pwdError');
+  const sucEl = document.getElementById('pwdSuccess');
+  errEl.className = 'alert error';
+  sucEl.className = 'alert success';
+
+  if (!oldPwd || !newPwd || !confirmPwd) {
+    errEl.textContent = 'Remplissez tous les champs.';
+    errEl.className = 'alert error show'; return;
+  }
+
+  const oldHash = await sha256(oldPwd);
+  if (oldHash !== currentUser.password_hash) {
+    errEl.textContent = 'Ancien mot de passe incorrect.';
+    errEl.className = 'alert error show'; return;
+  }
+
+  if (newPwd.length < 8) {
+    errEl.textContent = 'Minimum 8 caractères.';
+    errEl.className = 'alert error show'; return;
+  }
+  if (!/[A-Z]/.test(newPwd)) {
+    errEl.textContent = 'Au moins 1 majuscule requise.';
+    errEl.className = 'alert error show'; return;
+  }
+  if (!/[0-9]/.test(newPwd)) {
+    errEl.textContent = 'Au moins 1 chiffre requis.';
+    errEl.className = 'alert error show'; return;
+  }
+  if (newPwd !== confirmPwd) {
+    errEl.textContent = 'Les mots de passe ne correspondent pas.';
+    errEl.className = 'alert error show'; return;
+  }
+
+  const newHash = await sha256(newPwd);
+  currentUser.password_hash = newHash;
+  if (CONFIG) {
+    const idx = CONFIG.users.findIndex(u => u.username === currentUser.username);
+    if (idx >= 0) {
+      CONFIG.users[idx].password_hash = newHash;
+      localStorage.setItem('bulletinpro_config', JSON.stringify(CONFIG));
+    }
+  }
+
+  sucEl.textContent = '✅ Mot de passe modifié !';
+  sucEl.className = 'alert success show';
+  setTimeout(() => showHome(), 2000);
+}
 
 // ═══════════════════════════════════════
 // SAISIE DES NOTES
 // ═══════════════════════════════════════
-function updateEleves() { /* Pour usage futur */ }
-
 function startSaisie() {
   const classe = document.getElementById('selClasse').value;
   const matiere = document.getElementById('selMatiere').value;
@@ -390,15 +542,10 @@ function startSaisie() {
   const type = document.getElementById('selType').value;
   const nom = document.getElementById('evalNom').value.trim();
 
-  if (!classe || !matiere || !nom) {
-    alert('Veuillez remplir tous les champs.'); return;
-  }
+  if (!classe || !matiere || !nom) { alert('Remplissez tous les champs.'); return; }
 
-  // Élèves de la classe sélectionnée
-  const eleves = (CONFIG.eleves && CONFIG.eleves[classe]) ? CONFIG.eleves[classe] : [];
-  if (eleves.length === 0) {
-    alert('Aucun élève trouvé pour cette classe.'); return;
-  }
+  const eleves = (CONFIG && CONFIG.eleves && CONFIG.eleves[classe]) ? CONFIG.eleves[classe] : [];
+  if (eleves.length === 0) { alert('Aucun élève trouvé.'); return; }
 
   currentSession = { classe, matiere, periode, type, nom, eleves, notes: {} };
 
@@ -413,17 +560,15 @@ function startSaisie() {
 
   const container = document.getElementById('elevesContainer');
   container.innerHTML = '';
-
   eleves.forEach((eleve, i) => {
     const div = document.createElement('div');
     div.className = 'eleve-card';
     div.innerHTML = `
       <div class="eleve-num">${i+1}</div>
       <div class="eleve-name">${eleve}</div>
-      <input type="number" class="eleve-note"
-        id="note_${i}" placeholder="—"
-        min="0" max="20" step="0.25"
-        oninput="onNoteChange(${i}, '${eleve.replace(/'/g,"\\'")}', this)"
+      <input type="number" class="eleve-note" id="note_${i}"
+        placeholder="—" min="0" max="20" step="0.25"
+        oninput="onNoteChange(${i},'${eleve.replace(/'/g,"\\'")}',this)"
         onfocus="this.select()">
     `;
     container.appendChild(div);
@@ -456,57 +601,43 @@ function updateProgress() {
 }
 
 // ═══════════════════════════════════════
-// SAUVEGARDE ET EXPORT
+// EXPORT
 // ═══════════════════════════════════════
 function saveSession() {
   const notes = currentSession.notes;
   const total = currentSession.eleves.length;
   const saisies = Object.keys(notes).length;
-
   if (saisies === 0) { alert('Aucune note saisie.'); return; }
-
-  if (saisies < total) {
-    if (!confirm(`${total - saisies} élève(s) sans note (absent(s) ?). Continuer ?`)) return;
-  }
+  if (saisies < total && !confirm(`${total-saisies} élève(s) sans note. Continuer ?`)) return;
 
   const now = new Date();
   exportData = {
-    version: "1.0",
-    type: "bulletinpro_notes",
+    version: "1.0", type: "bulletinpro_notes",
     timestamp: now.toISOString(),
-    etablissement: CONFIG.etablissement,
+    etablissement: CONFIG ? CONFIG.etablissement : '',
     professeur: currentUser.nom,
     username: currentUser.username,
     evaluation: {
-      nom: currentSession.nom,
-      type: currentSession.type,
-      classe: currentSession.classe,
-      matiere: currentSession.matiere,
-      periode: currentSession.periode,
-      date: now.toLocaleDateString('fr-FR'),
+      nom: currentSession.nom, type: currentSession.type,
+      classe: currentSession.classe, matiere: currentSession.matiere,
+      periode: currentSession.periode, date: now.toLocaleDateString('fr-FR'),
     },
-    notes: currentSession.eleves.map(eleve => ({
-      eleve, note: notes[eleve] !== undefined ? notes[eleve] : null
-    })),
+    notes: currentSession.eleves.map(e => ({ eleve: e, note: notes[e] !== undefined ? notes[e] : null })),
     stats: {
-      total, saisies,
-      absents: total - saisies,
-      moyenne: saisies > 0 ?
-        Math.round(Object.values(notes).reduce((a,b) => a+b, 0) / saisies * 100) / 100 : null
+      total, saisies, absents: total - saisies,
+      moyenne: saisies > 0 ? Math.round(Object.values(notes).reduce((a,b)=>a+b,0)/saisies*100)/100 : null
     }
   };
 
-  // Sauvegarder localement
   const sessions = JSON.parse(localStorage.getItem('bulletinpro_sessions') || '[]');
   sessions.push(exportData);
   localStorage.setItem('bulletinpro_sessions', JSON.stringify(sessions.slice(-20)));
 
-  const fileName = `BP_${currentSession.classe}_${currentSession.matiere}_${currentSession.periode}_${currentSession.nom}.json`
-    .replace(/[^a-zA-Z0-9_.\-]/g, '_');
-  exportData._fileName = fileName;
-  document.getElementById('exportFileName').textContent = fileName;
-  showScreen('screenExport');
+  const fn = `BP_${currentSession.classe}_${currentSession.matiere}_${currentSession.periode}_${currentSession.nom}.json`.replace(/[^a-zA-Z0-9_.\-]/g,'_');
+  exportData._fileName = fn;
+  document.getElementById('exportFileName').textContent = fn;
   document.getElementById('headerSub').textContent = 'Export';
+  showScreen('screenExport');
 }
 
 function downloadJson() {
@@ -531,7 +662,7 @@ function loadSavedSessions() {
   sessions.slice(-5).reverse().forEach((s, i) => {
     const idx = sessions.length - 1 - i;
     const div = document.createElement('div');
-    div.style = 'padding:10px 0; border-bottom:1px solid #f1f5f9; display:flex; align-items:center; gap:10px;';
+    div.style = 'padding:10px 0;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;gap:10px;';
     div.innerHTML = `
       <div style="flex:1">
         <div style="font-size:14px;font-weight:500">${s.evaluation.nom} — ${s.evaluation.classe}</div>
@@ -546,7 +677,7 @@ function loadSavedSessions() {
 function reexport(idx) {
   const sessions = JSON.parse(localStorage.getItem('bulletinpro_sessions') || '[]');
   exportData = sessions[idx];
-  const fn = `BP_${exportData.evaluation.classe}_${exportData.evaluation.matiere}_${exportData.evaluation.periode}.json`.replace(/[^a-zA-Z0-9_.\-]/g, '_');
+  const fn = `BP_${exportData.evaluation.classe}_${exportData.evaluation.matiere}_${exportData.evaluation.periode}.json`.replace(/[^a-zA-Z0-9_.\-]/g,'_');
   exportData._fileName = fn;
   document.getElementById('exportFileName').textContent = fn;
   showScreen('screenExport');
@@ -554,7 +685,6 @@ function reexport(idx) {
 
 // Init
 loadConfig();
-updateConfigStatus();
 </script>
 </body>
 </html>
