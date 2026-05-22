@@ -99,7 +99,7 @@ input:focus, select:focus { outline: none; border-color: var(--blue); box-shadow
   </div>
 
   <div class="card">
-    <div class="card-title">🔐 Connexion</div>
+    <div class="card-title">Connexion</div>
     <div class="alert error" id="loginError"></div>
 
     <label>Nom d'utilisateur</label>
@@ -116,6 +116,12 @@ input:focus, select:focus { outline: none; border-color: var(--blue); box-shadow
     <div class="text-center" style="margin-top:6px">
       <a href="#" onclick="showForgotPwd()" style="color:var(--blue);font-size:13px;text-decoration:none">Mot de passe oublié ?</a>
     </div>
+
+    <div class="sep"></div>
+    <button class="btn btn-orange" onclick="document.getElementById('fileImportLogin').click()">
+      📁 Importer vos données scolaires
+    </button>
+    <input type="file" id="fileImportLogin" accept=".json" style="display:none" onchange="importConfig(this)">
   </div>
 
 
@@ -335,8 +341,11 @@ function importConfig(input) {
       }
       localStorage.setItem('bulletinpro_config', JSON.stringify(data));
       CONFIG = data;
-      alert(`✅ Données importées !\n\n${data.etablissement}\n${data.classes.length} classe(s) importée(s)`);
-      showHome();
+      // Cacher le bouton import de la page login
+      const fi = document.getElementById('firstTimeImport');
+      if (fi) fi.style.display = 'none';
+      alert(`✅ Données importées !\n\n${data.etablissement}\n${data.classes.length} classe(s) importée(s)\n\nVous pouvez maintenant vous connecter.`);
+      if (currentUser) showHome();
     } catch(err) {
       alert('Fichier invalide : ' + err.message);
     }
@@ -685,6 +694,7 @@ function reexport(idx) {
 
 // Init
 loadConfig();
+
 </script>
 </body>
 </html>
