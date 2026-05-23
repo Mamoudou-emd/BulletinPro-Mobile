@@ -121,7 +121,7 @@ input:focus, select:focus { outline: none; border-color: var(--blue); box-shadow
     <button class="btn btn-orange" onclick="document.getElementById('fileImportLogin').click()">
       📁 Importer vos données scolaires
     </button>
-    <input type="file" id="fileImportLogin" accept=".json" style="display:none" onchange="importConfig(this)">
+    <input type="file" id="fileImportLogin" accept=".bpconfig,.json" style="display:none" onchange="importConfig(this)">
   </div>
 
 
@@ -225,7 +225,7 @@ input:focus, select:focus { outline: none; border-color: var(--blue); box-shadow
       <button class="btn btn-orange" onclick="document.getElementById('fileImport').click()">
         Choisir le fichier
       </button>
-      <input type="file" id="fileImport" accept=".json" style="display:none" onchange="importConfig(this)">
+      <input type="file" id="fileImport" accept=".bpconfig,.json" style="display:none" onchange="importConfig(this)">
 
       <div class="sep"></div>
       <button class="btn btn-outline" onclick="showHome()">← Retour</button>
@@ -327,6 +327,23 @@ function loadConfig() {
   const saved = localStorage.getItem('bulletinpro_config');
   if (saved) { CONFIG = JSON.parse(saved); return true; }
   return false;
+}
+
+// ═══════════════════════════════════════
+// DÉCHIFFREMENT BPCONFIG
+// ═══════════════════════════════════════
+const _SECRET = "BULLETINPRO_GUINEE2025_MAMOUDOU_DEV_XK9";
+
+async function sha256Bytes(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return new Uint8Array(buf);
+}
+
+async function decryptBpconfig(base64Data) {
+  const key = await sha256Bytes(_SECRET);
+  const encrypted = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0));
+  const decrypted = encrypted.map((b, i) => b ^ key[i % key.length]);
+  return JSON.parse(new TextDecoder().decode(decrypted));
 }
 
 function importConfig(input) {
