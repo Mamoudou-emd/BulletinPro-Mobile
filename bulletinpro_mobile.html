@@ -360,7 +360,10 @@ function importConfig(input) {
   const reader = new FileReader();
   reader.onload = function(e) {
     try {
-      const data = JSON.parse(e.target.result);
+      let data;
+      const content = e.target.result.trim();
+      try { data = decryptBpconfig(content); }
+      catch(e2) { data = JSON.parse(content); }
       if (data.type !== 'bulletinpro_config') {
         alert('Ce fichier n\'est pas valide.'); return;
       }
