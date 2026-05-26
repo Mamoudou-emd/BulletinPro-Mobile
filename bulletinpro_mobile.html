@@ -339,8 +339,17 @@ const _KEY = new Uint8Array([
 ]);
 
 function decryptBpconfig(base64Data) {
-  const encrypted = Uint8Array.from(atob(base64Data.trim()), c => c.charCodeAt(0));
-  const decrypted = encrypted.map((b, i) => b ^ _KEY[i % _KEY.length]);
+  // Nettoyer le base64 (retours à la ligne etc)
+  const clean = base64Data.trim().replace(/\s/g, '');
+  const binary = atob(clean);
+  const encrypted = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    encrypted[i] = binary.charCodeAt(i);
+  }
+  const decrypted = new Uint8Array(encrypted.length);
+  for (let i = 0; i < encrypted.length; i++) {
+    decrypted[i] = encrypted[i] ^ _KEY[i % _KEY.length];
+  }
   const jsonStr = new TextDecoder('utf-8').decode(decrypted);
   return JSON.parse(jsonStr);
 }
