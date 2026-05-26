@@ -330,20 +330,19 @@ function loadConfig() {
 }
 
 // ═══════════════════════════════════════
-// DÉCHIFFREMENT BPCONFIG
+// DÉCHIFFREMENT XOR + BASE64
 // ═══════════════════════════════════════
-const _SECRET = "BULLETINPRO_GUINEE2025_MAMOUDOU_DEV_XK9";
+// Clé SHA-256 de BULLETINPRO_GUINEE2025_MAMOUDOU_DEV_XK9
+const _KEY = new Uint8Array([
+  234,242,107,199,10,211,94,128,163,2,137,76,185,240,242,35,
+  110,81,232,214,16,156,159,211,37,211,182,142,114,7,186,82
+]);
 
-async function sha256Bytes(str) {
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-  return new Uint8Array(buf);
-}
-
-async function decryptBpconfig(base64Data) {
-  const key = await sha256Bytes(_SECRET);
-  const encrypted = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0));
-  const decrypted = encrypted.map((b, i) => b ^ key[i % key.length]);
-  return JSON.parse(new TextDecoder().decode(decrypted));
+function decryptBpconfig(base64Data) {
+  const encrypted = Uint8Array.from(atob(base64Data.trim()), c => c.charCodeAt(0));
+  const decrypted = encrypted.map((b, i) => b ^ _KEY[i % _KEY.length]);
+  const jsonStr = new TextDecoder('utf-8').decode(decrypted);
+  return JSON.parse(jsonStr);
 }
 
 function importConfig(input) {
